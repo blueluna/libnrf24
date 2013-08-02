@@ -7,7 +7,7 @@
 # Date:    2013-08
 #
 
-prefix := /opt/rpi-nrf24
+prefix := /usr/local
 
 SOURCES=src/sleep.c src/gpio.c src/spi.c src/nrf24.c
 OBJECTS=$(SOURCES:.c=.o)
@@ -29,3 +29,9 @@ $(LIBRARY): $(OBJECTS)
 
 clean:
 	rm -rf $(LIBRARY) $(OBJECTS)
+
+install:
+	cp $(LIBRARY) $(prefix)/lib/$(LIBRARY)
+	ln -sf $(prefix)/lib/$(LIBRARY) $(prefix)/lib/$(LIBNAME).so.1
+	ln -sf $(prefix)/lib/$(LIBRARY) $(prefix)/lib/$(LIBNAME).so
+	ldconfig

@@ -13,7 +13,11 @@ int32_t nrf24_ce(nrf24_handle handle, const uint8_t level)
 nrf24_handle nrf24_open(const int32_t spi_handle, const uint16_t ce_pin)
 {
   int32_t result = 0;
-  nrf24_handle handle = malloc(sizeof(nrf24_ctx_t));
+  nrf24_handle handle = 0;
+  if (spi_handle < 0) {
+    return 0;
+  }
+  handle = malloc(sizeof(nrf24_ctx_t));
   if (handle != 0) {
     handle->rx_buf = malloc(33);
     if (handle->rx_buf == 0) {
@@ -365,12 +369,14 @@ int32_t nrf24_read_rx_payload(nrf24_handle handle, uint8_t *data, const uint8_t 
 
 int32_t nrf24_flush_rx(nrf24_handle handle)
 {
-  return nrf24_spi_transfer_byte(handle->spi_handle, NRF24_SPI_FLUSH_RX, 0);
+  handle->tx_buf[0] = NRF24_SPI_FLUSH_RX;
+  return nrf24_spi_transfer(handle->spi_handle, handle->tx_buf, 0, 1);
 }
 
 int32_t nrf24_flush_tx(nrf24_handle handle)
 {
-  return nrf24_spi_transfer_byte(handle->spi_handle, NRF24_SPI_FLUSH_TX, 0);
+  handle->tx_buf[0] = NRF24_SPI_FLUSH_TX;
+  return nrf24_spi_transfer(handle->spi_handle, handle->tx_buf, 0, 1);
 }
 
 int32_t nrf24_listen(nrf24_handle handle)

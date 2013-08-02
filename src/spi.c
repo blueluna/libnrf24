@@ -15,8 +15,8 @@
 int32_t nrf24_spi_open(const uint32_t controller, const uint32_t device, const uint32_t speed, const uint8_t bits, const uint8_t mode)
 {
   int32_t fd = -1;
-  int32_t result = -1;
-  char devicefile[256];
+  int32_t result = 0;
+  char devicefile[256] = {0};
   if (sprintf(devicefile, "/dev/spidev%d.%d", controller, device) >= 0) {
     fd = open(devicefile, O_RDWR);
   }
@@ -105,32 +105,6 @@ int32_t nrf24_spi_transfer(const int32_t handle, uint8_t *tx, uint8_t *rx, const
   result = ioctl(handle, SPI_IOC_MESSAGE(1), &tr);
   if (result < 1) {
     perror("can't send spi message");
-  }
-  return result;
-}
-
-int32_t nrf24_spi_transfer_byte(const int32_t handle, const uint8_t tx, uint8_t *rx)
-{
-  int32_t result = 0;
-  uint8_t tx_buf[] = {0};
-  uint8_t rx_buf[] = {0};
-  struct spi_ioc_transfer tr;
-
-  tx_buf[0] = tx;
-  tr.tx_buf = (unsigned long)tx_buf;
-  tr.rx_buf = (unsigned long)rx_buf;
-  tr.len = 1;
-  tr.delay_usecs = 0;
-  tr.cs_change = 1;
-
-  result = ioctl(handle, SPI_IOC_MESSAGE(1), &tr);
-  if (result < 1) {
-    perror("can't send spi message");
-  }
-  else {
-    if (rx != 0) {
-      *rx = rx_buf[0]; 
-    }
   }
   return result;
 }
