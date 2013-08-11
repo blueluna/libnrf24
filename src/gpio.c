@@ -3,6 +3,7 @@
  */
 
 #include "gpio.h"
+#include "errorcodes.h"
 #include <stdio.h>
 
 int32_t nrf24_gpio_open(const uint16_t port, const uint8_t direction)
@@ -11,7 +12,7 @@ int32_t nrf24_gpio_open(const uint16_t port, const uint8_t direction)
   char file[128];
   f = fopen("/sys/class/gpio/export", "w");
   if (f == 0) {
-    return -1;
+    return NRF24_OPEN_FAILED;
   }
   fprintf(f, "%u\n", port);
   fclose(f);
@@ -19,7 +20,7 @@ int32_t nrf24_gpio_open(const uint16_t port, const uint8_t direction)
   sprintf(file, "/sys/class/gpio/gpio%u/direction", port);
   f = fopen(file, "w");
   if (f == 0) {
-    return -1;
+    return NRF24_OPEN_FAILED;
   }
   if (direction == NRF24_GPIO_INPUT) {
     fprintf(f, "in\n");
@@ -28,7 +29,7 @@ int32_t nrf24_gpio_open(const uint16_t port, const uint8_t direction)
     fprintf(f, "out\n");
   }
   fclose(f);
-  return 0;
+  return NRF24_OK;
 }
 
 int32_t nrf24_gpio_close(const uint16_t port)
@@ -36,11 +37,11 @@ int32_t nrf24_gpio_close(const uint16_t port)
   FILE *f;
   f = fopen("/sys/class/gpio/unexport", "w");
   if (f == 0) {
-    return -1;
+    return NRF24_OPEN_FAILED;
   }
   fprintf(f, "%d\n", port);
   fclose(f);
-  return 0;
+  return NRF24_OK;
 }
 
 int32_t nrf24_gpio_read(const uint16_t port, uint8_t *value)
@@ -51,7 +52,7 @@ int32_t nrf24_gpio_read(const uint16_t port, uint8_t *value)
   sprintf(file, "/sys/class/gpio/gpio%u/value", port);
   f = fopen(file, "r");
   if (f == 0) {
-    return -1;
+    return NRF24_OPEN_FAILED;
   }
   fscanf(f, "%d", &i);
   if (value == 0) {
@@ -68,7 +69,7 @@ int32_t nrf24_gpio_write(const uint16_t port, const uint8_t value)
   sprintf(file, "/sys/class/gpio/gpio%u/value", port);
   f = fopen(file, "w");
   if (f == 0) {
-    return -1;
+    return NRF24_OPEN_FAILED;
   }
   if (value == NRF24_GPIO_LOW) {
     fprintf(f, "0\n");
@@ -77,5 +78,5 @@ int32_t nrf24_gpio_write(const uint16_t port, const uint8_t value)
     fprintf(f, "1\n");
   }
   fclose(f);
-  return 0;
+  return NRF24_OK;
 }

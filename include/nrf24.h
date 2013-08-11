@@ -39,12 +39,12 @@ int32_t nrf24_set_rx_payload_length(nrf24_handle handle, const uint8_t pipe, con
 
 int32_t nrf24_clear_status(nrf24_handle handle);
 
-int32_t nrf24_get_rx_address(nrf24_handle handle, const uint8_t pipe, uint64_t *address);
-int32_t nrf24_set_rx_address(nrf24_handle handle, const uint8_t pipe, const uint64_t address);
+int32_t nrf24_get_rx_address(nrf24_handle handle, const uint8_t pipe, uint8_t *address, const uint32_t address_len);
+int32_t nrf24_set_rx_address(nrf24_handle handle, const uint8_t pipe, const uint8_t *address, const uint32_t address_len);
 int32_t nrf24_set_rx_address_byte(nrf24_handle handle, const uint8_t pipe, const uint8_t address);
 
-int32_t nrf24_get_tx_address(nrf24_handle handle, uint64_t *address);
-int32_t nrf24_set_tx_address(nrf24_handle handle, const uint64_t address);
+int32_t nrf24_get_tx_address(nrf24_handle handle, uint8_t *address, const uint32_t address_len);
+int32_t nrf24_set_tx_address(nrf24_handle handle, const uint8_t *address, const uint32_t address_len);
 
 int32_t nrf24_write_tx_payload(nrf24_handle handle, const uint8_t *data, const uint8_t len);
 int32_t nrf24_read_rx_payload(nrf24_handle handle, uint8_t *data, const uint8_t len);

@@ -3,6 +3,7 @@
  */
 
 #include "spi.h"
+#include "errorcodes.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -15,15 +16,14 @@
 int32_t nrf24_spi_open(const uint32_t controller, const uint32_t device, const uint32_t speed, const uint8_t bits, const uint8_t mode)
 {
   int32_t fd = -1;
-  int32_t result = 0;
+  int32_t result = NRF24_OK;
   char devicefile[256] = {0};
   if (sprintf(devicefile, "/dev/spidev%d.%d", controller, device) >= 0) {
     fd = open(devicefile, O_RDWR);
   }
   if (fd < 0) {
     fd = -1;
-    result = -1;
-    perror("can't open device");
+    result = NRF24_OPEN_FAILED;
   }
   /*
    * spi mode
@@ -74,26 +74,30 @@ int32_t nrf24_spi_open(const uint32_t controller, const uint32_t device, const u
     if (fd >= 0) {
       close(fd);
     }
-    return result;
+    return NRF24_OPEN_FAILED;
   }
   return fd;
 }
 
 int32_t nrf24_spi_close(const int32_t handle)
 {
-  if (handle > 0) {
+  if (handle >= 0) {
     close(handle);
+    return NRF24_OK;
   }
-  return 0;
+  return NRF24_INVALID_HANDLE;
 }
 
 int32_t nrf24_spi_transfer(const int32_t handle, uint8_t *tx, uint8_t *rx, const uint16_t len)
 {
-  int32_t result = 0;
+  int32_t result = NRF24_OK;
   struct spi_ioc_transfer tr = {0};
 
+  if (handle < 0) {
+    return NRF24_INVALID_HANDLE;
+  }
   if (tx == 0 || rx == 0) {
-    return (int32_t)(-1);
+    return NRF24_INVALID_ARGUMENT;
   }
 
   tr.tx_buf = (unsigned long)tx;
@@ -104,7 +108,7 @@ int32_t nrf24_spi_transfer(const int32_t handle, uint8_t *tx, uint8_t *rx, const
 
   result = ioctl(handle, SPI_IOC_MESSAGE(1), &tr);
   if (result < 1) {
-    perror("can't send spi message");
+    result = NRF24_TRANSFER_FAILED;
   }
   return result;
 }
