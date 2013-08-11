@@ -2,7 +2,7 @@
 #
 # Makefile for nrf24 library
 #
-# License: GPL (General Public License)
+# License: MIT
 # Author:  Erik Svensson <erik.public@gmail.com>
 # Date:    2013-08
 #
