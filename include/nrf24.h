@@ -52,7 +52,7 @@ int32_t nrf24_read_rx_payload(nrf24_handle handle, uint8_t *data, const uint8_t 
 int32_t nrf24_flush_rx(nrf24_handle handle);
 int32_t nrf24_flush_tx(nrf24_handle handle);
 
-int32_t nrf24_listen(nrf24_handle handle);
+int32_t nrf24_start_listen(nrf24_handle handle);
 int32_t nrf24_stop_listen(nrf24_handle handle);
 
 int32_t nrf24_get_status(nrf24_handle handle, uint8_t *data_ready, uint8_t *data_sent, uint8_t *max_retry);

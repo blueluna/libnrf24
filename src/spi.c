@@ -90,7 +90,7 @@ int32_t nrf24_spi_close(const int32_t handle)
 int32_t nrf24_spi_transfer(const int32_t handle, uint8_t *tx, uint8_t *rx, const uint16_t len)
 {
   int32_t result = 0;
-  struct spi_ioc_transfer tr;
+  struct spi_ioc_transfer tr = {0};
 
   if (tx == 0 || rx == 0) {
     return (int32_t)(-1);

@@ -80,7 +80,7 @@ int32_t nrf24_set_register(nrf24_handle handle, const uint8_t address, const uin
   }
   handle->tx_buf[0] = NRF24_SPI_WRITE_REGISTER | (address & NRF24_REGISTER_ADDRESS_MASK);
   handle->tx_buf[1] = value;
-  return nrf24_spi_transfer(handle->spi_handle, handle->tx_buf, 0, 2);
+  return nrf24_spi_transfer(handle->spi_handle, handle->tx_buf, handle->rx_buf, 2);
 }
 
 int32_t nrf24_get_rx_address(nrf24_handle handle, const uint8_t pipe, uint64_t *address)
@@ -379,7 +379,7 @@ int32_t nrf24_flush_tx(nrf24_handle handle)
   return nrf24_spi_transfer(handle->spi_handle, handle->tx_buf, 0, 1);
 }
 
-int32_t nrf24_listen(nrf24_handle handle)
+int32_t nrf24_start_listen(nrf24_handle handle)
 {
   uint8_t reg;
   int32_t result = nrf24_get_register(handle, NRF24_REG_CONFIG, &reg);
@@ -472,7 +472,7 @@ int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len)
   result = nrf24_get_register(handle, NRF24_REG_CONFIG, &reg);
   if (result >= 0) {
     if ((reg & NRF24_CONFIG_PRIM_RX) == 0) {
-      result = -1;
+      result = -2;
     }
   }
   if (result >= 0) {
@@ -481,7 +481,7 @@ int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len)
   }
   if (result >= 0) {
     if ((reg & NRF24_STATUS_RX_DR) == 0) {
-      result = -1;
+      result = -3;
     }
   }
   if (result >= 0) {
