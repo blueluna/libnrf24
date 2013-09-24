@@ -13,6 +13,8 @@ typedef struct nrf24_ctx_s {
 
 typedef nrf24_ctx_t* nrf24_handle;
 
+/* Open an nrf24 context
+ */
 nrf24_handle nrf24_open(const int32_t spi_handle, const uint16_t ce_pin);
 int32_t nrf24_close(nrf24_handle handle);
 

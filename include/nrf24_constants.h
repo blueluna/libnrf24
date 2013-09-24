@@ -1,3 +1,9 @@
+/* 
+ * Copyright (c) 2013, Erik Svensson <erik.public@gmail.com>
+ *
+ * Constants for use with nrf24xxxx handling
+ */
+
 #ifndef NRF24_CONSTANTS_H
 #define NRF24_CONSTANTS_H
 
