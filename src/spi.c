@@ -34,12 +34,14 @@ int32_t nrf24_spi_open(const uint32_t controller, const uint32_t device, const u
 	if (result == 0) {
 		result = ioctl(fd, SPI_IOC_WR_MODE, &mode);
 		if (result == -1) {
+			result = NRF24_SETUP_FAILED;
 			perror("can't set spi write mode");
 		}
 	}
 	if (result == 0) {
 		result = ioctl(fd, SPI_IOC_RD_MODE, &mode);
 		if (result == -1) {
+			result = NRF24_SETUP_FAILED;
 			perror("can't set spi read mode");
 		}
 	}
@@ -49,12 +51,14 @@ int32_t nrf24_spi_open(const uint32_t controller, const uint32_t device, const u
 	if (result == 0) {
 		result = ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits);
 		if (result == -1) {
+			result = NRF24_SETUP_FAILED;
 			perror("can't set write bits per word");
 		}
 	}
 	if (result == 0) {
 		result = ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits);
 		if (result == -1) {
+			result = NRF24_SETUP_FAILED;
 			perror("can't set read bits per word");
 		}
 	}
@@ -64,12 +68,14 @@ int32_t nrf24_spi_open(const uint32_t controller, const uint32_t device, const u
 	if (result == 0) {
 		result = ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed);
 		if (result == -1) {
+			result = NRF24_SETUP_FAILED;
 			perror("can't set write max speed hz");
 		}
 	}
 	if (result == 0) {
 		result = ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &speed);
 		if (result == -1) {
+			result = NRF24_SETUP_FAILED;
 			perror("can't set read max speed hz");
 		}
 	}
@@ -77,7 +83,7 @@ int32_t nrf24_spi_open(const uint32_t controller, const uint32_t device, const u
 		if (fd >= 0) {
 			close(fd);
 		}
-		return NRF24_OPEN_FAILED;
+		return result;
 	}
 	return fd;
 }
