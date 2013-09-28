@@ -495,8 +495,12 @@ int32_t nrf24_stop_listen(nrf24_handle handle)
 {
 	int32_t result = NRF24_OK;
 	result = nrf24_ce(handle, NRF24_GPIO_LOW);
-	nrf24_flush_rx(handle);
-	nrf24_flush_tx(handle);
+	if (result >= 0) {
+		result = nrf24_flush_rx(handle);
+	}
+	if (result >= 0) {
+		result = nrf24_flush_tx(handle);
+	}
 	return result;
 }
 
@@ -548,11 +552,11 @@ int32_t nrf24_send(nrf24_handle handle, const uint8_t *data, const uint8_t len)
 	/* Clear status */
 	if ((reg & NRF24_STATUS_TX_DS) == NRF24_STATUS_TX_DS) {
 		nrf24_set_register(handle, NRF24_REG_STATUS, NRF24_STATUS_TX_DS);
-		result = 0;
+		result = NRF24_OK;
 	}
 	if ((reg & NRF24_STATUS_MAX_RT) == NRF24_STATUS_MAX_RT) {
 		nrf24_set_register(handle, NRF24_REG_STATUS, NRF24_STATUS_MAX_RT);
-		result = -2;
+		result = NRF24_MAX_RETRIES;
 	}
 	result = nrf24_ce(handle, NRF24_GPIO_LOW);
 	return result;
@@ -568,7 +572,7 @@ int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len)
 	result = nrf24_get_register(handle, NRF24_REG_CONFIG, &reg);
 	if (result >= 0) {
 		if ((reg & NRF24_CONFIG_PRIM_RX) == 0) {
-			result = -2;
+			result = NRF24_NOT_LISTENING;
 		}
 	}
 	if (result >= 0) {
@@ -577,7 +581,7 @@ int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len)
 	}
 	if (result >= 0) {
 		if ((reg & NRF24_STATUS_RX_DR) == 0) {
-			result = -3;
+			result = NRF24_NO_DATA;
 		}
 	}
 	if (result >= 0) {
