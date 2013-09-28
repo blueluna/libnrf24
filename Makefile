@@ -9,7 +9,7 @@
 
 prefix := /usr/local
 
-SOURCES=src/sleep.c src/gpio.c src/spi.c src/nrf24.c
+SOURCES=src/sleep.c src/gpio.c src/spi.c src/nrf24.c src/decode.c
 OBJECTS=$(SOURCES:.c=.o)
 LIBNAME=libnrf24
 LIBRARY=$(LIBNAME).so.1.0
