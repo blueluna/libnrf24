@@ -5,6 +5,7 @@
 #include "spi.h"
 #include "gpio.h"
 #include "errorcodes.h"
+#include "sleep.h"
 
 int32_t nrf24_ce(nrf24_handle handle, const uint8_t level)
 {
@@ -379,6 +380,35 @@ int32_t nrf24_set_rx_payload_length(nrf24_handle handle, const uint8_t pipe, con
 		return NRF24_INVALID_ARGUMENT;
 	}
 	return nrf24_set_register(handle, NRF24_REG_RX_PW_P0 + pipe, length);
+}
+
+int32_t nrf24_get_auto_retransmit(nrf24_handle handle, uint8_t *retries, uint16_t *delay)
+{
+	uint8_t regval = 0;
+	int32_t result = NRF24_OK;
+	if (delay == 0 && retries == 0) {
+		return NRF24_INVALID_ARGUMENT;
+	}
+	result = nrf24_get_register(handle, NRF24_REG_SETUP_RETR, &regval);
+	if (result == NRF24_OK) {
+		if (delay != 0) {
+			*delay = ((regval >> 4) + 1) * 250;
+		}
+		if (retries != 0) {
+			*retries = (regval & 0x0f);
+		}
+	}
+	return result;
+}
+
+int32_t nrf24_set_auto_retransmit(nrf24_handle handle, const uint8_t retries, const uint16_t delay)
+{
+	uint8_t regval = 0;
+	if (delay < 250 || delay > 4000 || retries > 15) {
+		return NRF24_INVALID_ARGUMENT;
+	}
+	regval = (((uint8_t)(delay / 250)) << 4) | retries;
+	return nrf24_set_register(handle, NRF24_REG_SETUP_RETR, regval);
 }
 
 int32_t nrf24_clear_status(nrf24_handle handle)
