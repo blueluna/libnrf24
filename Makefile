@@ -14,9 +14,8 @@ OBJECTS=$(SOURCES:.c=.o)
 LIBNAME=libnrf24
 LIBRARY=$(LIBNAME).so.1.0
 
-# The recommended compiler flags for the Raspberry Pi
 CC=gcc
-CCFLAGS=-c -Wall -pedantic -Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
+CCFLAGS=-c -Wall -pedantic -O3 -fpic
 LDFLAGS=-shared
 
 all: $(SOURCES) $(LIBRARY)
