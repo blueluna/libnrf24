@@ -81,11 +81,25 @@ int32_t nrf24_get_channel(nrf24_handle handle, uint8_t *channel);
  */
 int32_t nrf24_set_channel(nrf24_handle handle, const uint8_t channel);
 
-int32_t nrf24_get_data_rate(nrf24_handle handle, uint8_t *data_rate);
-int32_t nrf24_set_data_rate(nrf24_handle handle, const uint8_t data_rate);
+/* Get the current data rate in kbps (Kilo bits per second).
+ * data_rate is the current channel speed in kbps.
+ */
+int32_t nrf24_get_data_rate(nrf24_handle handle, uint16_t *data_rate);
 
-int32_t nrf24_get_power(nrf24_handle handle, uint8_t *power);
-int32_t nrf24_set_power(nrf24_handle handle, const uint8_t power);
+/* Set the data rate, the data rate is described i kbps (Kilo bits per second).
+ * data_rate is the channel speed to set. Available values are 250, 1000 and 2000.
+ */
+int32_t nrf24_set_data_rate(nrf24_handle handle, const uint16_t data_rate);
+
+/* Get the transmission power in dBm.
+ * power is the current transmission power in dBm.
+ */
+int32_t nrf24_get_power(nrf24_handle handle, int8_t *power);
+
+/* Set the transmission power in dBm.
+ * power is the current transmission power in dBm. Available values are -18, -12, -6 and 0dBm.
+ */
+int32_t nrf24_set_power(nrf24_handle handle, const int8_t power);
 
 /* Get the payload length for a receiver data pipe.
  * pipe is the data pipe to get the payload length for

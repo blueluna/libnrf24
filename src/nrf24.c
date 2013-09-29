@@ -292,7 +292,7 @@ int32_t nrf24_set_channel(nrf24_handle handle, const uint8_t channel)
 	return NRF24_INVALID_ARGUMENT;
 }
 
-int32_t nrf24_get_data_rate(nrf24_handle handle, uint8_t *data_rate)
+int32_t nrf24_get_data_rate(nrf24_handle handle, uint16_t *data_rate)
 {
 	int32_t result = NRF24_OK;
 	uint8_t reg = 0;
@@ -301,15 +301,15 @@ int32_t nrf24_get_data_rate(nrf24_handle handle, uint8_t *data_rate)
 	}
 	result = nrf24_get_register(handle, NRF24_REG_RF_SETUP, &reg);
 	if (result >= 0) {
-		if ((reg & 0x20) == 0x20) {
-			*data_rate = NRF24_DATA_RATE_250KBPS;
+		if ((reg & NRF24_DATA_RATE_250KBPS) == NRF24_DATA_RATE_250KBPS) {
+			*data_rate = 250;
 		}
 		else {
-			if ((reg & 0x08) == 0x08) {
-			 *data_rate = NRF24_DATA_RATE_2MBPS;
+			if ((reg & NRF24_DATA_RATE_2MBPS) == NRF24_DATA_RATE_2MBPS) {
+				*data_rate = 2000;
 			}
 			else {
-			 *data_rate = NRF24_DATA_RATE_1MBPS;
+				*data_rate = 1000;
 			}
 		}
 		return NRF24_OK;
@@ -317,29 +317,32 @@ int32_t nrf24_get_data_rate(nrf24_handle handle, uint8_t *data_rate)
 	return result;
 }
 
-int32_t nrf24_set_data_rate(nrf24_handle handle, const uint8_t data_rate)
+int32_t nrf24_set_data_rate(nrf24_handle handle, const uint16_t data_rate)
 {
 	int32_t result = NRF24_OK;
 	uint8_t reg = 0;
+	uint8_t dr = 0;
+	if (data_rate == 2000) {
+		dr = NRF24_DATA_RATE_2MBPS;
+	}
+	else if (data_rate == 1000) {
+		dr = NRF24_DATA_RATE_1MBPS;
+	}
+	else if (data_rate == 250)  {
+		dr = NRF24_DATA_RATE_250KBPS;
+	}
+	else {
+		return NRF24_INVALID_ARGUMENT;
+	}
 	result = nrf24_get_register(handle, NRF24_REG_RF_SETUP, &reg);
 	if (result >= 0) {
-		uint8_t dr = 0;
-		if (data_rate == NRF24_DATA_RATE_1MBPS) {
-			dr = 0x08;
-		}
-		else if (data_rate == NRF24_DATA_RATE_2MBPS) {
-			dr = 0x28;
-		}
-		else {
-			dr = 0x20;
-		}
 		reg = (reg & 0xD7) | dr;
 		return nrf24_set_register(handle, NRF24_REG_RF_SETUP, reg);
 	}
 	return result;
 }
 
-int32_t nrf24_get_power(nrf24_handle handle, uint8_t *power)
+int32_t nrf24_get_power(nrf24_handle handle, int8_t *power)
 {
 	int32_t result = NRF24_OK;
 	uint8_t reg = 0;
@@ -348,19 +351,46 @@ int32_t nrf24_get_power(nrf24_handle handle, uint8_t *power)
 	}
 	result = nrf24_get_register(handle, NRF24_REG_RF_SETUP, &reg);
 	if (result >= 0) {
-		*power = (reg & 0x06);
+		if ((reg & NRF24_POWER_0DBM) == NRF24_POWER_0DBM) {
+			*power = 0;
+		}
+		else if ((reg & NRF24_POWER_N6DBM) == NRF24_POWER_N6DBM) {
+			*power = -6;
+		}
+		else if ((reg & NRF24_POWER_N12DBM) == NRF24_POWER_N12DBM) {
+			*power = -12;
+		}
+		else {
+			*power = -18;
+		}
 		return NRF24_OK;
 	}
 	return result;
 }
 
-int32_t nrf24_set_power(nrf24_handle handle, const uint8_t power)
+int32_t nrf24_set_power(nrf24_handle handle, const int8_t power)
 {
 	int32_t result = NRF24_OK;
+	uint8_t pow = 0;
 	uint8_t reg = 0;
+	if (power == 0) {
+		pow = NRF24_POWER_0DBM;
+	}
+	else if (power == -6) {
+		pow = NRF24_POWER_N6DBM;
+	}
+	else if (power == -12) {
+		pow = NRF24_POWER_N12DBM;
+	}
+	else if (power == -18) {
+		pow = NRF24_POWER_N18DBM;
+	}
+	else {
+		return NRF24_INVALID_ARGUMENT;
+	}
 	result = nrf24_get_register(handle, NRF24_REG_RF_SETUP, &reg);
 	if (result >= 0) {
-		reg = (reg & 0xF9) | power;
+		reg = (reg & 0xF9) | pow;
 		return nrf24_set_register(handle, NRF24_REG_RF_SETUP, reg);
 	}
 	return result;

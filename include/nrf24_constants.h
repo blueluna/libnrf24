@@ -52,8 +52,8 @@
 
 /* Radio data rates */
 #define NRF24_DATA_RATE_1MBPS 0x00
-#define NRF24_DATA_RATE_2MBPS 0x01
-#define NRF24_DATA_RATE_250KBPS 0x02
+#define NRF24_DATA_RATE_2MBPS 0x08
+#define NRF24_DATA_RATE_250KBPS 0x20
 
 /* Radio Power levels */
 #define NRF24_POWER_N18DBM 0x00
