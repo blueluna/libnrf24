@@ -9,17 +9,18 @@
 
 prefix := /usr/local
 
-VERSION_MAJOR := 0
-VERSION_MINOR := 1
-VERSION_FIX := 0
-GIT_REVISION := $(shell git describe --always --dirty 2> /dev/null)
+VERSION_MAJOR=0
+VERSION_MINOR=1
+VERSION_FIX=0
+GIT_REVISION:=$(shell git describe --always --dirty 2> /dev/null)
 SOURCES=src/sleep.c src/gpio.c src/spi.c src/nrf24.c src/decode.c
 OBJECTS=$(SOURCES:.c=.o)
 LIBNAME=libnrf24
 LIBRARY=$(LIBNAME).so.$(VERSION_MAJOR).$(VERSION_MINOR)
 
 CC=gcc
-CCFLAGS=-c -Wall -pedantic -O3 -fpic -DNRF24_VERSION_MAJOR=$(VERSION_MAJOR) -DNRF24_VERSION_MINOR=$(VERSION_MINOR) -DNRF24_VERSION_FIX=$(VERSION_FIX)
+CCFLAGS=-c -Wall -pedantic -O3 -fpic -DNRF24_VERSION_MAJOR=$(VERSION_MAJOR) \
+	-DNRF24_VERSION_MINOR=$(VERSION_MINOR) -DNRF24_VERSION_FIX=$(VERSION_FIX)
 LDFLAGS=-shared
 
 ifneq ($(GIT_REVISION),)
