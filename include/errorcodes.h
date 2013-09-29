@@ -8,13 +8,13 @@
 #include <stdint.h>
 
 #define NRF24_OK 					0
-#define NRF24_INVALID_ARGUMENT 		-100
-#define NRF24_INVALID_HANDLE 		-101
-#define NRF24_OPEN_FAILED			-102
-#define NRF24_SETUP_FAILED			-103
-#define NRF24_TRANSFER_FAILED		-104
-#define NRF24_NOT_LISTENING			-105
-#define NRF24_NO_DATA				-106
-#define NRF24_MAX_RETRIES			-107
+#define NRF24_INVALID_ARGUMENT 		-100 /* An argument is invalid */
+#define NRF24_INVALID_HANDLE 		-101 /* A handle is invalid */
+#define NRF24_OPEN_FAILED			-102 /* Failed to open resource */
+#define NRF24_SETUP_FAILED			-103 /* Failed to configure resource */
+#define NRF24_TRANSFER_FAILED		-104 /* Failed to receive or send */
+#define NRF24_NOT_LISTENING			-105 /* Resource not configured for read */
+#define NRF24_NO_DATA				-106 /* No data is available */
+#define NRF24_MAX_RETRIES			-107 /* Reached maximum retries */
 
 #endif /* NRF24_ERRORCCODES_H */
