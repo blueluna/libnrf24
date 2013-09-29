@@ -5,8 +5,6 @@
 #ifndef NRF24_ERRORCCODES_H
 #define NRF24_ERRORCCODES_H
 
-#include <stdint.h>
-
 #define NRF24_OK 					0
 #define NRF24_INVALID_ARGUMENT 		-100 /* An argument is invalid */
 #define NRF24_INVALID_HANDLE 		-101 /* A handle is invalid */
