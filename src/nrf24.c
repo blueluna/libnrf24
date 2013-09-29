@@ -7,6 +7,22 @@
 #include "errorcodes.h"
 #include "sleep.h"
 
+void nrf24_version(uint16_t *major, uint16_t *minor, uint16_t *fix, char *commit, const int32_t commit_len)
+{
+	if (major != 0) {
+		*major = NRF24_VERSION_MAJOR;
+	}
+	if (minor != 0) {
+		*minor = NRF24_VERSION_MINOR;
+	}
+	if (fix != 0) {
+		*fix = NRF24_VERSION_FIX;
+	}
+	if (commit != 0 && commit_len > 0) {
+		strncat(commit, NRF24_COMMIT, commit_len);
+	}
+}
+
 int32_t nrf24_ce(nrf24_handle handle, const uint8_t level)
 {
 	if (handle == 0) {

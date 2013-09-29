@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include "nrf24_constants.h"
 
+void nrf24_version(uint16_t *major, uint16_t *minor, uint16_t *fix, char *commit, const int32_t commit_len);
+
 typedef struct nrf24_ctx_s {
 	int32_t spi_handle; /* A handle to the SPI interface */
 	uint16_t ce_pin; /* The GPIO index for the CE signal */
