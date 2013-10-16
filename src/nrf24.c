@@ -154,7 +154,8 @@ int32_t nrf24_get_rx_address(nrf24_handle handle, const uint8_t pipe, uint8_t *a
 	return result;
 }
 
-int32_t nrf24_set_rx_address(nrf24_handle handle, const uint8_t pipe, const uint8_t *address, const uint32_t address_len)
+int32_t nrf24_set_rx_address(nrf24_handle handle, const uint8_t pipe, const uint8_t *address,
+	const uint32_t address_len)
 {
 	if (handle == 0) {
 		return NRF24_INVALID_HANDLE;
