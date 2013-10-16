@@ -221,10 +221,11 @@ int32_t nrf24_send(nrf24_handle handle, const uint8_t *data, const uint8_t len);
 /* Receive data. Must be used when listening.
  * data is the data buffer to receive the data.
  * len is the size of the data buffer.
+ * rx_pipe is the pointer that will receive the pipe number for the receive pipe, may be NULL.
  *
  * Returns the number of bytes received on success, NRF24_NOT_LISTENING if the radio is in transmitter mode, 
  * NRF24_NO_DATA if no data is available or other.
  */
-int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len);
+int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len, uint8_t *rx_pipe);
 
 #endif /* NRF24_H */

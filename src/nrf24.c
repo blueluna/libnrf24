@@ -608,10 +608,11 @@ int32_t nrf24_send(nrf24_handle handle, const uint8_t *data, const uint8_t len)
 	return result;
 }
 
-int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len)
+int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len, uint8_t *rx_pipe)
 {
 	int32_t result = NRF24_OK;
 	uint8_t reg;
+	uint8_t pipe;
 	if (data == 0 || len == 0) {
 		return NRF24_INVALID_ARGUMENT;
 	}
@@ -629,9 +630,15 @@ int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len)
 		if ((reg & NRF24_STATUS_RX_DR) == 0) {
 			result = NRF24_NO_DATA;
 		}
+		else {
+			pipe = (reg & 0x0e) >> 1;
+		}
 	}
 	if (result >= 0) {
 		result = nrf24_read_rx_payload(handle, data, len);
+	}
+	if (result >= 0 && rx_pipe != 0) {
+		*rx_pipe = pipe;
 	}
 	/* Clear status */
 	nrf24_set_register(handle, NRF24_REG_STATUS, NRF24_STATUS_RX_DR);
