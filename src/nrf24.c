@@ -608,6 +608,21 @@ int32_t nrf24_send(nrf24_handle handle, const uint8_t *data, const uint8_t len)
 	return result;
 }
 
+int32_t nrf24_send_to(nrf24_handle handle, const uint8_t *data, const uint8_t data_len, const uint8_t *address,
+	const uint32_t address_len)
+{
+	int32_t result;
+	result = nrf24_set_tx_address(handle, address, address_len);
+	if (result == NRF24_OK) {
+		/* TODO: Check for automatic re-transmission before setting receive address */
+		result = nrf24_set_rx_address(handle, 0, address, address_len);
+	}
+	if (result == NRF24_OK) {
+		result = nrf24_send(handle, data, data_len);
+	}
+	return result;
+}
+
 int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len, uint8_t *rx_pipe)
 {
 	int32_t result = NRF24_OK;

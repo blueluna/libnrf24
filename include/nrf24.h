@@ -218,6 +218,16 @@ int32_t nrf24_get_status(nrf24_handle handle, uint8_t *data_ready, uint8_t *data
  */
 int32_t nrf24_send(nrf24_handle handle, const uint8_t *data, const uint8_t len);
 
+/* Send data to specific address. Must be used when NOT listening.
+ * data is the data buffer to send.
+ * data_len is the number of bytes to send.
+ * address is the address to sent to.
+ * address_len is the number of bytes in the address.
+ *
+ * Returns NRF24_OK on success, NRF24_MAX_RETRIES if the transmission failed because of retry count or other.
+ */
+ int32_t nrf24_send_to(nrf24_handle handle, const uint8_t *data, const uint8_t data_len, const uint8_t *address, const uint32_t address_len);
+
 /* Receive data. Must be used when listening.
  * data is the data buffer to receive the data.
  * len is the size of the data buffer.
