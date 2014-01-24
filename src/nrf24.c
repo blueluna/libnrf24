@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <memory.h>
+#include <time.h>
 #include "spi.h"
 #include "gpio.h"
 #include "errorcodes.h"
@@ -574,6 +575,8 @@ int32_t nrf24_send(nrf24_handle handle, const uint8_t *data, const uint8_t len)
 {
 	int32_t result = NRF24_OK;
 	uint8_t reg = 0;
+	double dt;
+	time_t start, t;
 	if (data == 0 || len == 0) {
 		return NRF24_INVALID_ARGUMENT;
 	}
@@ -591,21 +594,36 @@ int32_t nrf24_send(nrf24_handle handle, const uint8_t *data, const uint8_t len)
 	if (result >= 0) {
 		result = nrf24_clear_status(handle);
 	}
-	result = nrf24_ce(handle, NRF24_GPIO_HIGH);
-	/* Wait for data send or max retries */
-	do {
+	if (result >= 0) {
+	  result = nrf24_ce(handle, NRF24_GPIO_HIGH);
+	}
+	if (result >= 0) {
+	  /* Wait for data send or max retries */
+	  start = time(NULL);
+	  do {
+		t = time(NULL);
+		dt = difftime(t, start);
 		result = nrf24_get_register(handle, NRF24_REG_STATUS, &reg);
-	} while ((reg & NRF24_STATUS_TX_DS) == NRF24_STATUS_TX_DS || (reg & NRF24_STATUS_MAX_RT) == NRF24_STATUS_MAX_RT);
-	/* Clear status */
-	if ((reg & NRF24_STATUS_TX_DS) == NRF24_STATUS_TX_DS) {
-		nrf24_set_register(handle, NRF24_REG_STATUS, NRF24_STATUS_TX_DS);
-		result = NRF24_OK;
+	  } while (((reg & NRF24_STATUS_TX_DS) == NRF24_STATUS_TX_DS || (reg & NRF24_STATUS_MAX_RT) == NRF24_STATUS_MAX_RT) && dt <= 1.0);
+	  if (dt > 1.0) {
+		result = NRF24_TIMEOUT;
+	  }
+	  else {
+		/* Clear status */
+		if ((reg & NRF24_STATUS_TX_DS) == NRF24_STATUS_TX_DS) {
+			nrf24_set_register(handle, NRF24_REG_STATUS, NRF24_STATUS_TX_DS);
+			result = NRF24_OK;
+		}
+		if ((reg & NRF24_STATUS_MAX_RT) == NRF24_STATUS_MAX_RT) {
+			nrf24_set_register(handle, NRF24_REG_STATUS, NRF24_STATUS_MAX_RT);
+			result = NRF24_MAX_RETRIES;
+		}	
+	  }
+	}	
+	nrf24_ce(handle, NRF24_GPIO_LOW);
+	if (result == NRF24_OK) {
+		return 42;
 	}
-	if ((reg & NRF24_STATUS_MAX_RT) == NRF24_STATUS_MAX_RT) {
-		nrf24_set_register(handle, NRF24_REG_STATUS, NRF24_STATUS_MAX_RT);
-		result = NRF24_MAX_RETRIES;
-	}
-	result = nrf24_ce(handle, NRF24_GPIO_LOW);
 	return result;
 }
 

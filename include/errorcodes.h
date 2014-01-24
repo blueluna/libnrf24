@@ -14,5 +14,6 @@
 #define NRF24_NOT_LISTENING			-105 /* Resource not configured for read */
 #define NRF24_NO_DATA				-106 /* No data is available */
 #define NRF24_MAX_RETRIES			-107 /* Reached maximum retries */
+#define NRF24_TIMEOUT				-108 /* Operation timed out */
 
 #endif /* NRF24_ERRORCCODES_H */
