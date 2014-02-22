@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2013, Erik Svensson <erik.public@gmail.com>
+ * Copyright (c) 2013-2014, Erik Svensson <erik.public@gmail.com>
  *
  * Helper functions for sleeping
  */

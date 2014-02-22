@@ -10,11 +10,12 @@ Developed for RaspberryPi.
 Hardware requirements
 ---------------------
 
- * A nRF24L01 chip connected to a SPI bus and a GPIO pin (CE) available in user space (/dev/spidev, /sys/class/gpio).
+ * A nRF24L01 chip connected to a SPI bus and a GPIO pin (CE) available in user
+   space (/dev/spidev, /sys/class/gpio).
 
 Copyright
 ---------
 
 Released under the MIT license.
 
-© 2013 Erik Svensson, <erik.public@gmail.com>.
+© 2013-2014 Erik Svensson, <erik.public@gmail.com>.

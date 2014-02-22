@@ -1,3 +1,9 @@
+/* 
+ * Copyright (c) 2013-2014, Erik Svensson <erik.public@gmail.com>
+ *
+ * Handling communication with nRF24L01 chips using user space SPI and GPIO
+ */
+
 #include "nrf24.h"
 #include <stdlib.h>
 #include <stdio.h>
