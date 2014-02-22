@@ -4,6 +4,8 @@
  * Helper functions for sleeping
  */
 
+#define _POSIX_C_SOURCE 199309L
+ 
 #include "sleep.h"
 #include <stddef.h>
 #include <time.h>

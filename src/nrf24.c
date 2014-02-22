@@ -652,7 +652,7 @@ int32_t nrf24_receive(nrf24_handle handle, uint8_t *data, const uint8_t len, uin
 {
 	int32_t result = NRF24_OK;
 	uint8_t reg;
-	uint8_t pipe;
+	uint8_t pipe = 0;
 	if (data == 0 || len == 0) {
 		return NRF24_INVALID_ARGUMENT;
 	}
