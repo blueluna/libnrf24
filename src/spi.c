@@ -100,7 +100,13 @@ int32_t nrf24_spi_close(const int32_t handle)
 int32_t nrf24_spi_transfer(const int32_t handle, uint8_t *tx, uint8_t *rx, const uint16_t len)
 {
 	int32_t result = NRF24_OK;
-	struct spi_ioc_transfer tr = {0};
+	struct spi_ioc_transfer tr = {
+		.tx_buf = 0,
+		.rx_buf = 0,
+		.len = 0,
+		.delay_usecs = 0,
+		.cs_change = 0
+	};
 
 	if (handle < 0) {
 		return NRF24_INVALID_HANDLE;
