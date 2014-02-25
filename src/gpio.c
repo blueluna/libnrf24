@@ -57,7 +57,7 @@ int32_t nrf24_gpio_read(const uint16_t port, uint8_t *value)
 		return NRF24_OPEN_FAILED;
 	}
 	fscanf(f, "%d", &i);
-	if (value == 0) {
+	if (value != 0) {
 		*value = i;
 	}
 	fclose(f);
